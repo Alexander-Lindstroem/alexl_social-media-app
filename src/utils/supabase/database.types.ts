@@ -14,6 +14,58 @@ export type Database = {
   }
   public: {
     Tables: {
+      comments: {
+        Row: {
+          created_at: string
+          id: string
+          is_deleted: boolean
+          parent_comment: string | null
+          parent_post: number
+          parent_user: string
+          text: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_deleted?: boolean
+          parent_comment?: string | null
+          parent_post: number
+          parent_user: string
+          text: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_deleted?: boolean
+          parent_comment?: string | null
+          parent_post?: number
+          parent_user?: string
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_parent_comment_fkey"
+            columns: ["parent_comment"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_parent_post_fkey"
+            columns: ["parent_post"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_parent_user_fkey"
+            columns: ["parent_user"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
           content: string | null

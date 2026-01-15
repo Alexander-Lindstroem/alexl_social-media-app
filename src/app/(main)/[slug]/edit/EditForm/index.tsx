@@ -1,10 +1,11 @@
 'use client'
 import { editPost } from "@/actions/edit-post"
 import { postSchema } from "@/actions/schemas"
-import {Tables} from "@/utils/supabase/database.types"
+import { Tables } from "@/utils/supabase/database.types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import z from "zod"
 
 const EditForm = ({postId, defaultValues}: {postId: number, defaultValues: Pick<Tables<'posts'>, "title" | "content" | "image">}) => {
@@ -22,7 +23,9 @@ const EditForm = ({postId, defaultValues}: {postId: number, defaultValues: Pick<
     })
 
     const {mutate, error} = useMutation({
-        mutationFn: editPost
+        mutationFn: editPost,
+        onMutate: () => toast("Editing post..."),
+        onSettled: () => toast.success("Edit done!")
     })
     
     return (

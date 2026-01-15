@@ -5,14 +5,17 @@ import { useForm } from "react-hook-form"
 import { signupSchema } from "@/actions/schemas"
 import { useMutation } from "@tanstack/react-query"
 import ErrorMessage from "@/components/ErrorMessage"
+import { toast } from "sonner"
 
 const LoginForm = () => {
     const {register, handleSubmit, formState: {errors}} = useForm({
         resolver: zodResolver(signupSchema)
     })
 
-    const { mutate, isPending, error } = useMutation({
-        mutationFn: signup
+    const { mutate, isPending, data, error } = useMutation({
+        mutationFn: signup,
+        onMutate: () => toast("Registering..."),
+        onSettled: () => toast.success("Successfully registered!")
     })
 
     return ( 
@@ -35,7 +38,7 @@ const LoginForm = () => {
                 </fieldset>
                 <button className="button-secondary">Sign up!</button>
             </form>
-            {error && error.message}
+            {data?.error && data.error}
             {isPending && <p className="text-red-500">Loading...</p>}
         </div>
     )

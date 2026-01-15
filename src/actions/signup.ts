@@ -21,7 +21,7 @@ export const signup = async (userdata:z.infer<typeof signupSchema>) => {
             }])
     }
 
-    if(error) throw error
+    if (error) return {error: error.message}
 
     redirect("/")
 }

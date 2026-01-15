@@ -5,14 +5,17 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { loginSchema } from "../../../../actions/schemas"
 import { useMutation } from "@tanstack/react-query"
 import ErrorMessage from "@/components/ErrorMessage"
+import { toast } from "sonner"
 
 const LoginForm = () => {
     const {register, handleSubmit, formState: {errors}} = useForm({
         resolver: zodResolver(loginSchema)
     })
 
-    const { mutate, isPending, error } = useMutation({
-        mutationFn: login
+    const { mutate, isPending, data, error } = useMutation({
+        mutationFn: login,
+        onMutate: () => toast("Logging in..."),
+        onSettled: () => toast.success("Welcome!")
     })
 
     return ( 
@@ -30,7 +33,7 @@ const LoginForm = () => {
                 </fieldset>
                 <button className="button-secondary">Log in!</button>
             </form>
-            {error && <p>{error.message}</p>}
+            {data?.error && <p>{data.error}</p>}
             {isPending && <p>Loading...</p>}
         </div>
     )
