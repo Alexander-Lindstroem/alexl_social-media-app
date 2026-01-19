@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import z from "zod"
 
-const EditForm = ({postId, defaultValues}: {postId: number, defaultValues: Pick<Tables<'posts'>, "title" | "content" | "image">}) => {
+const EditForm = ({postId, defaultValues}: {postId: number, defaultValues: Pick<Tables<'posts'>, "title" | "content" | "image" | "category">}) => {
     const postWithImageSchema = postSchema
         .omit({image: true})
         .extend({ image: z.unknown().transform(value => {return value as (FileList)}).optional() })
@@ -18,7 +18,8 @@ const EditForm = ({postId, defaultValues}: {postId: number, defaultValues: Pick<
         defaultValues: {
             title: defaultValues.title,
             content: defaultValues.content || undefined,
-            image: defaultValues.image
+            image: defaultValues.image,
+            category: defaultValues.category
         }
     })
 
@@ -43,6 +44,7 @@ const EditForm = ({postId, defaultValues}: {postId: number, defaultValues: Pick<
                     postId,
                     userdata:
                     {
+                        category: values.category,
                         title: values.title,
                         content: values.content,
                         image: imageForm

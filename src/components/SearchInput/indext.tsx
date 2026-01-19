@@ -3,20 +3,23 @@ import { SetStateAction, useState } from "react"
 import { Search } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import { getSearchedPosts } from "@/utils/supabase/queries"
+import { useDebouncer } from "@/utils/hooks/useDebouncer"
 import Link from "next/link"
 
 const SearchInput = () => {
     const [userInput, setUserInput] = useState<string>('')
-    const {data} = useQuery({
+    const debouncedInput = useDebouncer(userInput, 300)
+    const {data, isLoading} = useQuery({
         queryKey: ['search-results', userInput],
         queryFn: async() => {
             const {data, error} = await getSearchedPosts(userInput)
             if (error) throw new Error
             return data
         },
-        enabled: userInput && userInput.length > 0 ? true : false
+        enabled: debouncedInput.length > 0 ? true : false,
+        placeholderData: (previousData) => previousData,
+        staleTime: 30000, 
     })
-    console.log(data)
     const handleChange = (e: { target: { value: SetStateAction<string> } }) => {
         setUserInput(e.target.value)
     }
@@ -34,7 +37,7 @@ const SearchInput = () => {
                     className="p-2 rounded-xl border-1 border-black border-solid" 
                     value={userInput}
                 />
-                {data && 
+                {data && data.length > 0 && userInput.length > 0 && 
                 <div className="w-full bg-white flex flex-col absolute rounded-b-xl bottom-0 translate-y-[100%] border-1 border-black border-solid">
                     {data.map(({title, slug}, index) => <Link key={index} className="border-b-1 border-black border-solid p-2 last-of-type:border-none" href={`/${slug}`}>{title}</Link>)}
                 </div>}

@@ -13,8 +13,8 @@ export default async function Home() {
       <section className="flex flex-col gap-4">
           <h2 className="text-4xl text-center py-2">Recent Posts</h2>
           {data && 
-          data.map(({id, title, slug, users}) => (
-            <PostPreview key={id} title={title} author={users.username} link={slug} />
+          data.map(({id, title, slug, users, categories}) => (
+            <PostPreview key={id} title={title} author={users.username} link={slug} category={categories.category_name}/>
           ))}
       </section>
     </main>

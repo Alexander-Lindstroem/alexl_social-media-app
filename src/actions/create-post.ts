@@ -33,7 +33,8 @@ export const createPost = async (userdata: z.infer<typeof postSchema>) => {
             slug: slug,
             title: parsedData.title,
             content: parsedData.content,
-            image: imagePublicUrl
+            image: imagePublicUrl,
+            category: parsedData.category
         }])
         .throwOnError()
     

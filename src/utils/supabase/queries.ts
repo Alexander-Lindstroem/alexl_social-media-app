@@ -4,8 +4,9 @@ import { type QueryData } from "@supabase/supabase-js"
 export const getHomePosts = async (supabase: ReturnType<typeof createClient>) => {
     return await supabase
         .from('posts')
-        .select('id, title, slug, users("username")')
+        .select('id, title, slug, users("username"), categories("category_name")')
         .order('created_at', {ascending: false})
+        .limit(20)
 }
 
 export const getSinglePosts = async (slug: string) => {
@@ -13,7 +14,7 @@ export const getSinglePosts = async (slug: string) => {
 
     return await supabase
         .from('posts')
-        .select('id, user_id, title, image, content, users("username")')
+        .select('id, user_id, title, image, content, category, users("username")')
         .eq('slug', slug)
         .single()
 }
@@ -35,6 +36,24 @@ export const getComments = async (postId:number) => {
         .select('id, created_at, text, parent_user, parent_post, parent_comment, is_deleted, users("username")')
         .eq('parent_post', postId)
         .order("created_at", {ascending: false})
+}
+
+export const getCategories = async () => {
+    const supabase = createClient()
+
+    return await supabase
+        .from("categories")
+        .select("id, category_name, visible")
+        .order("id")
+}
+
+export const getCategoryPosts = async (categoryId:number) => {
+    const supabase = createClient()
+
+    return await supabase
+        .from("posts")
+        .select('id, title, slug, category("category_name"), users("username")')
+        .eq("category", categoryId)
 }
 
 export type HomePostType = QueryData<ReturnType<typeof getHomePosts>> 
