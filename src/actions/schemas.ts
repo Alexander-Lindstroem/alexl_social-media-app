@@ -1,4 +1,3 @@
-import { getCategories } from "@/utils/supabase/queries"
 import z from "zod"
 
 export const loginSchema = z.object({

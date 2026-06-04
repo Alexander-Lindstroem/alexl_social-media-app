@@ -1,22 +1,23 @@
-import { createClient } from "@/utils/supabase/server-client"
-import Link from "next/link"
-import LogOut from "@/components/LogOut"
+import LogOut from "@/components/LogOut";
+import { UserContextType, useUser } from "@/providers/user-context-provider";
+import { MobileMenuItem } from "../MobileMenuItem";
 
-const AccountLinks = async () => {
-    const supabase = await createClient()
-    const {data: {user}, error} = await supabase.auth.getUser();
+const AccountLinks = () => {
+  const { user, setUser } = useUser() as UserContextType;
 
-    return (
-        <div>
-            {user ? 
-            <div className="flex gap-2">
-                <Link href="/create" className="button-tertiary">Create Post</Link>
-                <LogOut/>
-            </div>
-            : 
-            <Link href="/auth/login" className="button-secondary">Log In</Link>}
-        </div>
-    )
-}
+  return (
+    <div className="flex md:flex-row flex-col md:gap-2">
+      <MobileMenuItem href="/categories" title="Browse" />
+      {user ? (
+        <>
+          <MobileMenuItem href="/create" title="Create Post" />
+          <LogOut />
+        </>
+      ) : (
+        <MobileMenuItem href="/auth/login" title="Log In" />
+      )}
+    </div>
+  );
+};
 
-export default AccountLinks
+export default AccountLinks;

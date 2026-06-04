@@ -1,20 +1,16 @@
-import PostPreview from "@/components/PostPreview"
-import { getCategoryPosts } from "@/utils/supabase/queries"
+import DisplayPosts from "@/components/DisplayPosts"
+import { getPosts } from "@/utils/supabase/queries"
 
 const SingleCategoryPage = async ({params}:{params:{name:string, id:string}}) => {
     const {name, id} = await params
     const parsedId = parseInt(id)
 
-    const {data, error} = await getCategoryPosts(parsedId)
+    const {data, error} = id === "1" ? await getPosts() : await getPosts({categoryId: parsedId})
 
-    console.log(data)
     return (
-        <div>
-            <h2>{name}</h2>
-            {data && data.map((post, index) => {
-                return <PostPreview key={index} title={post.title} author={post.users.username} link={post.slug}/>
-            })}
-        </div>
+        <section className="grow">
+            {data && <DisplayPosts title={name} postData={data}/>}
+        </section>
     )
 }
 

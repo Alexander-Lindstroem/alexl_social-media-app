@@ -1,8 +1,8 @@
 import Link from "next/link"
 
-const Logo = () => {
+const Logo = ({className}:{className?:string}) => {
     return (
-        <Link href="/" className="button-primary">RipoffIt</Link>
+        <Link href="/" className={className}>RipoffIt</Link>
     )
 }
 

@@ -1,22 +1,14 @@
-import { createClient } from "@/utils/supabase/server-client";
-import { getHomePosts } from "@/utils/supabase/queries";
-import PostPreview from "@/components/PostPreview"; 
+import HomeCategories from "@/components/HomeCategories";
+import HomePosts from "@/components/HomePosts";
 
 export const revalidate = 600;
 
 export default async function Home() {
-  const supabase = await createClient()
-  const { data, error } = await getHomePosts(supabase)
 
-  return (
-    <main className="p-4">
-      <section className="flex flex-col gap-4">
-          <h2 className="text-4xl text-center py-2">Recent Posts</h2>
-          {data && 
-          data.map(({id, title, slug, users, categories}) => (
-            <PostPreview key={id} title={title} author={users.username} link={slug} category={categories.category_name}/>
-          ))}
-      </section>
-    </main>
+  return (  
+    <section className="flex flex-col justify-between md:flex-row w-full gap-4">
+      <HomePosts/>
+      <HomeCategories/>
+    </section>
   );
 }

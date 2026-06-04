@@ -1,12 +1,24 @@
 import { createClient } from "./browser-client"
 import { type QueryData } from "@supabase/supabase-js"
 
-export const getHomePosts = async (supabase: ReturnType<typeof createClient>) => {
-    return await supabase
+type GetPostsOptions = {
+    limit?:number, 
+    categoryId?:number
+}
+
+export const getPosts = async ({limit, categoryId}: GetPostsOptions = {}) => {
+    const supabase = createClient()
+
+    let query = supabase
         .from('posts')
         .select('id, title, slug, users("username"), categories("category_name")')
         .order('created_at', {ascending: false})
-        .limit(20)
+    if (categoryId) { query = query
+        .eq("category", categoryId)}
+    if (limit) { query = query
+        .limit(limit)}
+    
+    return await query
 }
 
 export const getSinglePosts = async (slug: string) => {
@@ -38,25 +50,20 @@ export const getComments = async (postId:number) => {
         .order("created_at", {ascending: false})
 }
 
-export const getCategories = async () => {
+export const getCategories = async (limit?:number) => {
     const supabase = createClient()
 
-    return await supabase
+    let query = supabase
         .from("categories")
         .select("id, category_name, visible")
         .order("id")
+    if (limit) {query = query
+        .limit(limit)}
+    
+    return await query
 }
 
-export const getCategoryPosts = async (categoryId:number) => {
-    const supabase = createClient()
-
-    return await supabase
-        .from("posts")
-        .select('id, title, slug, category("category_name"), users("username")')
-        .eq("category", categoryId)
-}
-
-export type HomePostType = QueryData<ReturnType<typeof getHomePosts>> 
+export type HomePostType = QueryData<ReturnType<typeof getPosts>> 
 
 //Kind of annoying to have to use the [0] here at the end, 
 //but it has to a be a single object for my code to work, 
@@ -66,3 +73,5 @@ export type UserCommentType = QueryData<ReturnType<typeof getComments>>[0]
 export type UserCommentWithChildrenType = UserCommentType & {
     children: UserCommentWithChildrenType[]
 }
+
+export type CategoryType = QueryData<ReturnType<typeof getCategories>>[0]

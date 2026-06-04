@@ -9,10 +9,11 @@ type PostPreviewProps = {
 
 const PostPreview = ({title, author, link, category}:PostPreviewProps) => {
     return (
-        <Link href={`/${link}`}>
-            <div className="border-solid border-black border-1 rounded-md p-4">
-                <div className="text-xl font-bold">{title}</div>
-                <div className="text-lg text-right">submitted by {author}{category && ` in ${category}`}</div>
+        <Link className="w-full max-w-[640px]" href={`/${link}`}>
+            <div className="border-solid border-rose-500 border-3 rounded-md shadow-md pb-4">
+                {category && <div className="capitalize text-white font-bold py-1 bg-gradient-to-b to-red-500 from-rose-500 text-center">{category}</div>}
+                <div className="text-lg font-bold capitalize px-4">{title}</div>
+                <div className="text-sm text-right px-4">Submitted by <span className="font-semibold">{author}</span></div>
             </div>
         </Link>
     )

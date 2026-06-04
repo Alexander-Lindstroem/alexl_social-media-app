@@ -1,6 +1,6 @@
 import { UserCommentType, UserCommentWithChildrenType } from "./supabase/queries";
 
-export const buildCommentTree = (commentData:UserCommentType[],):UserCommentWithChildrenType[] => {
+export const buildCommentTree = (commentData:UserCommentType[]):UserCommentWithChildrenType[] => {
     
     const commentMap = new Map<string, UserCommentWithChildrenType>();
     const roots:UserCommentWithChildrenType[] = []

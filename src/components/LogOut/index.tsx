@@ -1,10 +1,17 @@
-'use client'
-import { logout } from "../../actions/logout"
+"use client";
+import { toast } from "sonner";
+import { logout } from "../../actions/logout";
+import { useMutation } from "@tanstack/react-query";
+import { MobileMenuItem } from "../MobileMenuItem";
 
 const LogOut = () => {
-    return (
-        <button className="button-secondary cursor-pointer" onClick={logout}>Log Out</button>
-    )
-}
+  const { mutate, error } = useMutation({
+    mutationFn: logout,
+    onMutate: () => toast("Logging you out..."),
+    onSettled: () => toast.success("Logged out!"),
+  });
 
-export default LogOut 
+  return <MobileMenuItem title="Log Out" clickFunction={mutate} />;
+};
+
+export default LogOut;
